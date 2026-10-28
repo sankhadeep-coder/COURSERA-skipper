@@ -1,10 +1,11 @@
-# 🎓 Coursera Auto-Pilot
+# 🎓 Coursera Auto-Pilot (COURSERA-skipper)
 
-> Automatically skip videos, dismiss flashcard popups, and bypass quiz questions on Coursera — so you can breeze through course content effortlessly.
+> Automatically skip videos, dismiss flashcard popups, bypass quiz questions, skip audio readings, and auto-complete reading pages on Coursera — so you can breeze through course content effortlessly.
 
 ![Tampermonkey](https://img.shields.io/badge/Tampermonkey-Compatible-green?logo=tampermonkey&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 ![Platform](https://img.shields.io/badge/Platform-Chrome%20%7C%20Firefox%20%7C%20Edge-orange)
+![Version](https://img.shields.io/badge/Version-2.0-brightgreen)
 
 ---
 
@@ -13,10 +14,14 @@
 | Feature | Description |
 |---|---|
 | ⏩ **Auto-Skip Videos** | Jumps to 7 seconds before the end of any video, regardless of length |
+| 🔊 **Auto-Skip Audio** | Skips audio readings to 7 seconds before the end |
 | 📝 **Auto-Dismiss Flashcards** | Clicks "Continue learning" on the flashcard recap popup |
 | ❓ **Auto-Skip Questions** | Clicks "Skip" on in-video quiz questions |
+| ▶️ **Auto-Start Readings** | Clicks "Start" when the reading/next-item popup appears |
+| ✅ **Auto-Complete Readings** | Scrolls down and clicks "Mark as completed" on reading/audio pages |
+| ➡️ **Auto-Next Item** | Clicks "Go to next item" after marking as completed |
 | 🔁 **Works on All Pages** | Detects URL changes in Coursera's single-page app |
-| 🔄 **Retry Logic** | Keeps trying until the video seek actually works (up to 60 retries) |
+| 🔄 **Retry Logic** | Keeps trying until the video/audio seek actually works (up to 60 retries) |
 
 ---
 
@@ -44,9 +49,6 @@ You need a **userscript manager** browser extension. Install one of these:
 
 1. Click the **Tampermonkey icon** in your browser toolbar (top-right)
 2. Click **"Create a new script..."**
-
-   ![Step: Click create new script](https://img.shields.io/badge/Tampermonkey_Menu-→_Create_New_Script-informational?style=for-the-badge)
-
 3. You'll see a default template in the editor — **select all** the text (`Ctrl+A`) and **delete** it
 
 ### Step 3: Paste the Script
@@ -64,11 +66,27 @@ You need a **userscript manager** browser extension. Install one of these:
 ### Step 5: Use It!
 
 1. Go to [coursera.org](https://www.coursera.org)
-2. Open any course video
+2. Open any course
 3. The script will automatically:
-   - ⏩ Jump the video to **7 seconds before the end**
+   - ⏩ Jump videos to **7 seconds before the end**
+   - 🔊 Skip audio to **7 seconds before the end**
+   - ▶️ Click **"Start"** on reading/next-item popups
    - 📝 Click **"Continue learning"** on flashcard popups
    - ❓ Click **"Skip"** on quiz questions
+   - ✅ Scroll down & click **"Mark as completed"** on reading/audio pages
+   - ➡️ Click **"Go to next item"** after completion
+
+---
+
+## 🔄 How It Works
+
+```
+Video Page → Skip to end → Popup appears → Click "Continue learning" / "Skip"
+                                                      ↓
+Audio/Reading Page → Skip audio → Scroll down → "Mark as completed" → "Go to next item"
+                                                      ↓
+Reading Popup → Click "Start" → Content loads → Auto-complete flow
+```
 
 ---
 
@@ -79,10 +97,14 @@ You need a **userscript manager** browser extension. Install one of these:
 3. You should see logs like:
 
 ```
-[Coursera Bot] 🚀 Script loaded — auto-skipping videos & dismissing popups
+[Coursera Bot] 🚀 v2.0 loaded — auto-skipping videos, audio, readings & popups
 [Coursera Bot] ⏩ SUCCESS! Jumped to 253.0s / 260.0s
 [Coursera Bot] ✅ Clicked "Continue learning"
 [Coursera Bot] ✅ Clicked "Skip"
+[Coursera Bot] ✅ Clicked "Start"
+[Coursera Bot] 📖 Audio/Reading page — scrolling to "Mark as completed"
+[Coursera Bot] ✅ Marked as completed
+[Coursera Bot] ✅ Clicked "Go to next item"
 ```
 
 ---
@@ -101,7 +123,7 @@ const SKIP_BEFORE_END = 7;         // Seconds before end to jump to
 |---|---|---|
 | `CHECK_INTERVAL_MS` | `1000` | Polling interval in ms |
 | `CLICK_DELAY_MS` | `300` | Delay before auto-clicking |
-| `SKIP_BEFORE_END` | `7` | Jump to this many seconds before the video ends |
+| `SKIP_BEFORE_END` | `7` | Jump to this many seconds before the video/audio ends |
 
 ---
 
